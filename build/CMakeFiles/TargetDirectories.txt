@@ -1,0 +1,3 @@
+/home/arob/PACS/lab4/build/CMakeFiles/rebuild_cache.dir
+/home/arob/PACS/lab4/build/CMakeFiles/edit_cache.dir
+/home/arob/PACS/lab4/build/CMakeFiles/smallpt_thread_pool.dir

@@ -27,7 +27,7 @@
 #include <thread>
 #include <vector>
 
-#include <thread_pool.hpp>
+#include "include/thread_pool.hpp"
 
 // Vec is a structure to store position (x,y,z) and color (r,g,b)
 struct Vec {
@@ -246,14 +246,26 @@ int main(int argc, char *argv[]){
     auto *c_ptr = c.get(); // raw pointer to Vector c
 
     // create a thread pool
+    thread_pool pool;
 
     // launch the tasks
-
+    for (size_t y = 0; y<h; y+=h_div){ // Loop over image rows
+        for (size_t x = 0; x<w; x+=w_div){ // Loop cols
+            Region reg(x, std::min(x+w_div, w), y, std::min(y+h_div, h)); // region
+            pool.submit([=, &c_ptr]{ 
+                // encapsulate the render function call in a lambda
+                render(w, h, samps, cam, cx, cy, c_ptr, reg); 
+            });
+        }
+    }
 
     // wait for completion
+    pool.wait();
     auto stop = std::chrono::steady_clock::now();
     std::cout << "Execution time: " <<
       std::chrono::duration_cast<std::chrono::milliseconds>(stop-start).count() << " ms." << std::endl;
 
     write_output_file(c, w, h);
 }
+
+

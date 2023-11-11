@@ -1,1 +1,9 @@
-make: *** No targets specified and no makefile found.  Stop.
+Scanning dependencies of target smallpt_thread_pool
+[ 50%] Building CXX object CMakeFiles/smallpt_thread_pool.dir/smallpt_thread_pool.cpp.o
+[100%] Linking CXX executable smallpt_thread_pool
+/usr/bin/ld: CMakeFiles/smallpt_thread_pool.dir/smallpt_thread_pool.cpp.o: in function `std::thread::thread<void (thread_pool::*)(), thread_pool*, void>(void (thread_pool::*&&)(), thread_pool*&&)':
+smallpt_thread_pool.cpp:(.text._ZNSt6threadC2IM11thread_poolFvvEJPS1_EvEEOT_DpOT0_[_ZNSt6threadC5IM11thread_poolFvvEJPS1_EvEEOT_DpOT0_]+0x37): undefined reference to `pthread_create'
+collect2: error: ld returned 1 exit status
+make[2]: *** [CMakeFiles/smallpt_thread_pool.dir/build.make:84: smallpt_thread_pool] Error 1
+make[1]: *** [CMakeFiles/Makefile2:76: CMakeFiles/smallpt_thread_pool.dir/all] Error 2
+make: *** [Makefile:84: all] Error 2

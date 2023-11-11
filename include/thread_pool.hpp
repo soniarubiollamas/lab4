@@ -4,8 +4,8 @@
 #include <functional>
 #include <vector>
 
-#include<join_threads.hpp>
-#include<threadsafe_queue.hpp>
+#include "join_threads.hpp"
+#include "threadsafe_queue.hpp"
 
 // run jobs until a variable flags the termination of all the threads,
 // and the workers can either spin for tasks or call std::this_thread::yield 
