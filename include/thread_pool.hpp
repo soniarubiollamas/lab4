@@ -29,7 +29,7 @@ class thread_pool
       if(_work_queue.try_pop(task)) // try to pop a task from the queue
         task(); // execute the task
       else
-        std::this_thread::yield(); // yield to the OS (the thread does not have work to do
+        std::this_thread::yield(); // yield to the OS (the thread does not have work to do)
     }
   }
 

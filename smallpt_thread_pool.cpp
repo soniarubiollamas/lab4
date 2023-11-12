@@ -237,28 +237,39 @@ int main(int argc, char *argv[]){
     Vec cx=Vec(w*.5135/h), cy=(cx%cam.d).norm()*.5135;
     std::unique_ptr<Vec[]> c{new Vec[w*h]};
 
-    auto p = usage(argc, argv, w, h);
-    auto w_div = p.first;
-    auto h_div = p.second;
-
+    
     auto start = std::chrono::steady_clock::now();
 
     auto *c_ptr = c.get(); // raw pointer to Vector c
-
+    
     // create a thread pool
     thread_pool pool;
 
     // launch the tasks
-    for (size_t y = 0; y<h; y+=h_div){ // Loop over image rows
-        for (size_t x = 0; x<w; x+=w_div){ // Loop cols
-            Region reg(x, std::min(x+w_div, w), y, std::min(y+h_div, h)); // region
-            pool.submit([=, &c_ptr]{ 
-                // encapsulate the render function call in a lambda
-                render(w, h, samps, cam, cx, cy, c_ptr, reg); 
+    auto divisions = usage(argc, argv, w, h);
+    size_t w_divisions = divisions.first;
+    size_t h_divisions = divisions.second;
+
+    int h_div_per_region = static_cast<int>(h / h_divisions);
+    int w_div_per_region = static_cast<int>(w / w_divisions);
+
+    
+    for (size_t y_div = 0; y_div < h_divisions; ++y_div) {
+        for (size_t x_div = 0; x_div < w_divisions; ++x_div) {
+            int ymin = y_div * h_div_per_region;
+            int ymax = (y_div + 1) * h_div_per_region;
+
+            int xmin = x_div * w_div_per_region;
+            int xmax = (x_div + 1) * w_div_per_region;
+
+            Region reg(xmin, xmax, ymin, ymax);
+
+            // Use lambda function to encapsulate the render function call
+            pool.submit([=, &c_ptr] {
+                render(w, h, samps, cam, cx, cy, c_ptr, reg);
             });
         }
     }
-
     // wait for completion
     pool.wait();
     auto stop = std::chrono::steady_clock::now();
